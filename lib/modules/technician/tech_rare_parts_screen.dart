@@ -85,7 +85,15 @@ class _TechyAddRarePartsState extends State<TechyAddRareParts> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
-                              height: 30,
+                              height: 20,
+                            ),
+                            const Text(
+                              "You will receive a call from 9846403043, when someone intrested in this product.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             Row(
                               children: [
@@ -192,7 +200,7 @@ class _TechyAddRarePartsState extends State<TechyAddRareParts> {
                               ],
                             ),
                             const SizedBox(
-                              height: 30,
+                              height: 10,
                             ),
                             const Text(
                               "Brand",
@@ -292,26 +300,6 @@ class _TechyAddRarePartsState extends State<TechyAddRareParts> {
                                 return value == null || value.isEmpty
                                     ? 'fill the field'
                                     : null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              "Phone number",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            CustomTextField(
-                              input: TextInputType.number,
-                              borderColor: Colors.grey.shade300,
-                              controller: _phone,
-                              hintText: "Enter Phone number",
-                              validator: (value) {
-                                return value == null || value.isEmpty
-                                    ? 'fill the field'
-                                    : value.length != 10
-                                        ? 'Phone number must be 6 digit'
-                                        : null;
                               },
                             ),
                             const SizedBox(

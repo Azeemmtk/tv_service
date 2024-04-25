@@ -165,7 +165,7 @@ class _PartsfulldetailsState extends State<Partsfulldetails> {
                               ),
                               const Spacer(),
                               Text(
-                                "${widget.details['phone']}",
+                                "9846403043",
                                 style: TextStyle(
                                     fontSize: 17, color: Colors.black),
                               ),
