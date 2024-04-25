@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tv_service/widgets/custom_button.dart';
 
-
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key, this.totalAmount, this.phone});
+  PaymentScreen({super.key, this.totalAmount, this.phone});
 
-  final String  ? totalAmount;
-  final String ? phone;
+  final String? totalAmount;
+  final String? phone;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -15,6 +14,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? _selectedPaymentMethod;
+  final _formkey = GlobalKey<FormState>();
 
   void _handleRadioValueChange(String? value) {
     setState(() {
@@ -38,12 +38,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
-                    
-                  
 
-                    print('ddd')
-;
-                    
+                    print('ddd');
                   },
                   child: const Text('Submit'),
                 ),
@@ -52,26 +48,52 @@ class _PaymentScreenState extends State<PaymentScreen> {
           } else if (_selectedPaymentMethod == 'Card') {
             return AlertDialog(
               title: const Text('Enter Card Details'),
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Card Number'),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Expiry Date'),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'CVV'),
-                  ),
-                ],
+              content: Form(
+                key: _formkey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'Card Number'),
+                      validator: (value) {
+                        return value == null || value.isEmpty
+                            ? 'fill the field'
+                            : value.length != 16
+                                ? 'card number must be 16 digit'
+                                : null;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Expiry Date'),
+                      validator: (value) {
+                        return value == null || value.isEmpty
+                            ? 'fill the field'
+                            : null;
+                      },
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'CVV'),
+                      validator: (value) {
+                        return value == null || value.isEmpty
+                            ? 'fill the field'
+                            : value.length != 3
+                                ? 'card number must be 3 digit'
+                                : null;
+                      },
+                    ),
+                  ],
+                ),
               ),
               actions: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop(true);
-                    
+                    if (_formkey.currentState!.validate()) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(true);
+                    }
+
                     // Add your logic here to handle the card details
                   },
                   child: const Text('Submit'),
@@ -86,10 +108,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
-
-                   
-                    
-                    
                   },
                   child: const Text('OK'),
                 ),
@@ -137,29 +155,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 16.0),
             const Spacer(),
-            if(widget.phone != null)
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Phone:',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
-                Text(widget.phone!),
-                
-              ],
-
-            ),
+            if (widget.phone != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Phone:',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(widget.phone!),
+                ],
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Total:',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
+                const Text(
+                  'Total:',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
                 Text(widget.totalAmount!),
-                
               ],
-
             ),
-            
             Container(
-              padding: const
-               EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               width: MediaQuery.of(context).size.width,
               child: CustomButton(
                 onPressed: _handleAddPayment,

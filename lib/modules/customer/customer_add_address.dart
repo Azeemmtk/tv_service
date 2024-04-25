@@ -19,6 +19,7 @@ class _CustomerAddAddressState extends State<CustomerAddAddress> {
   final _landMarkController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
 
   bool loading = false;
 
@@ -37,104 +38,124 @@ class _CustomerAddAddressState extends State<CustomerAddAddress> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'name',
-                      controller: _nameController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'phone',
-                      controller: _phoneController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'city',
-                      controller: _cityController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'landmark',
-                      controller: _landMarkController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'state',
-                      controller: _stateController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'address',
-                      controller: _addressController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'pincode',
-                      controller: _pincodeController,
-                      borderColor: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: CustomButton(
-                        text: 'Add',
-                        onPressed: () async {
-                          if (_addressController.text.isNotEmpty &&
-                              _cityController.text.isNotEmpty &&
-                              _phoneController.text.isNotEmpty) {
-                            setState(() {
-                              loading = true;
-                            });
-
-                            await ApiServices().addAddress(
-                                context: context,
-                                loginId: DbService.getLoginId()!,
-                                address: _addressController.text,
-                                pincode: _pincodeController.text,
-                                state: _stateController.text,
-                                city: _cityController.text,
-                                landmark: _landMarkController.text,
-                                name: _nameController.text,
-                                phone: _phoneController.text);
-
-                            setState(() {
-                              loading = false;
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('All fields are required'),
-                              ),
-                            );
-                          }
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'name',
+                        controller: _nameController,
+                        borderColor: Colors.grey,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'phone',
+                        input: TextInputType.number,
+                        controller: _phoneController,
+                        borderColor: Colors.grey,
+                        validator: (value) {
+                          return value == null || value.isEmpty
+                              ? 'fill the field'
+                              : value.length != 10
+                                  ? 'Phone number must be 10 digit'
+                                  : null;
                         },
                       ),
-                    )
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'city',
+                        controller: _cityController,
+                        borderColor: Colors.grey,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'landmark',
+                        controller: _landMarkController,
+                        borderColor: Colors.grey,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'state',
+                        controller: _stateController,
+                        borderColor: Colors.grey,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'address',
+                        controller: _addressController,
+                        borderColor: Colors.grey,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        hintText: 'pincode',
+                        input: TextInputType.number,
+                        controller: _pincodeController,
+                        borderColor: Colors.grey,
+                        validator: (value) {
+                          return value == null || value.isEmpty
+                              ? 'fill the field'
+                              : value.length != 6
+                                  ? 'pincode must be 6 digit'
+                                  : null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: CustomButton(
+                          text: 'Add',
+                          onPressed: () async {
+                            if (_addressController.text.isNotEmpty &&
+                                _cityController.text.isNotEmpty) {
+                              if (_formkey.currentState!.validate()) {
+                                setState(() {
+                                  loading = true;
+                                });
+
+                                await ApiServices().addAddress(
+                                    context: context,
+                                    loginId: DbService.getLoginId()!,
+                                    address: _addressController.text,
+                                    pincode: _pincodeController.text,
+                                    state: _stateController.text,
+                                    city: _cityController.text,
+                                    landmark: _landMarkController.text,
+                                    name: _nameController.text,
+                                    phone: _phoneController.text);
+
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('All fields are required'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
