@@ -5,6 +5,8 @@ import 'package:tv_service/utils/constants.dart';
 import 'package:tv_service/widgets/custom_button.dart';
 import 'package:tv_service/widgets/custom_text_field.dart';
 
+import 'customer_feedback.dart';
+
 class CustomerProfileScreen extends StatelessWidget {
   CustomerProfileScreen({super.key});
 
@@ -107,20 +109,42 @@ class CustomerProfileScreen extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.of(context).size.width,
-                    child: CustomButton(
-                      text: 'Log out',
-                      color: KButtonColor,
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                            (route) => false);
-                      },
-                    ),
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        width: MediaQuery.of(context).size.width,
+                        child: CustomButton(
+                          text: 'Log out',
+                          color: KButtonColor,
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()),
+                                (route) => false);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        width: MediaQuery.of(context).size.width,
+                        child: CustomButton(
+                          text: 'Feedback',
+                          color: KButtonColor,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Customerfeedback(),
+                                ));
+                          },
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
